@@ -7,6 +7,7 @@ package view;
 
 import controllers.ChangeEvent;
 import controllers.ClickEvent;
+import controllers.ClickEventSales;
 import controllers.InitialData;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -55,6 +56,8 @@ public class ResultsVentaPanel  extends JPanel{
     public void initComponents(){
         
         InitialData initialData = new InitialData();
+        ClickEventSales clickEvent = new ClickEventSales(this);
+        ChangeEvent changeEvent = new ChangeEvent(this);
         
         setLayout(new GridLayout(3, 1, 50, 50));
         Font fontTitle = new Font("Century Gothic", Font.BOLD, 30);
@@ -68,10 +71,10 @@ public class ResultsVentaPanel  extends JPanel{
         
         
         this.panelFloor = new JPanel();
-        this.panelFloor.setLayout(new GridLayout(1, 2, 20, 50));
+        this.panelFloor.setLayout(new GridLayout(1, 2, 40, 100));
         
         this.panelFloor2 = new JPanel();
-        this.panelFloor2.setLayout(new GridLayout(1, 1, 20, 40));
+        this.panelFloor2.setLayout(new FlowLayout());
         
         //Client selection
         this.lblClient = new JLabel("Cliente", JLabel.CENTER);
@@ -83,8 +86,7 @@ public class ResultsVentaPanel  extends JPanel{
         this.cbxClientLst.setSelectedIndex(0);
         this.cbxClientLst.setFont(fontNormal);
         panelFloor.add(cbxClientLst);
-        
-        ChangeEvent changeEvent = new ChangeEvent(this);
+
         this.getCbxClientLst().addActionListener(changeEvent);
         
         
@@ -99,6 +101,7 @@ public class ResultsVentaPanel  extends JPanel{
         this.cbxBicycleLst.setFont(fontNormal);
         panelFloor.add(cbxBicycleLst);
         
+        //this.cbxBicycleLst.addActionListener(changeEvent);
         
         //this.panelRight = new JPanel();
         
@@ -107,7 +110,7 @@ public class ResultsVentaPanel  extends JPanel{
         btnSearch.setFont(fontNormal);
         panelFloor2.add(btnSearch);
         
-        ClickEvent clickEvent = new ClickEvent(this);
+        
         this.btnSearch.addActionListener(clickEvent);
         
         
@@ -131,12 +134,7 @@ public class ResultsVentaPanel  extends JPanel{
         return cbxClientLst;
     }
 
-    /**
-     * @param cbxClientLst the cbxClientLst to set
-     */
-    public void setCbxClientLst(JComboBox<ClienteModel> cbxClientLst) {
-        this.cbxClientLst = cbxClientLst;
-    }
+    
 
     /**
      * @return the lblBicycle
@@ -155,8 +153,17 @@ public class ResultsVentaPanel  extends JPanel{
     /**
      * @param cbxBicycleLst the cbxBicycleLst to set
      */
-    public void setCbxBicycleLst(JComboBox<BicicletaModel> cbxBicycleLst) {
-        this.cbxBicycleLst = cbxBicycleLst;
+    public void setCbxBicycleLst(ArrayList<BicicletaModel> bicycles) {
+        this.cbxBicycleLst.setModel(new DefaultComboBoxModel<>(bicycles.toArray(new BicicletaModel[bicycles.size()])));
+        this.cbxBicycleLst.setSelectedIndex(0);
+    }
+    
+    /**
+     * @param cbxClientLst the cbxClientLst to set
+     */
+    public void setCbxClientLst(ArrayList<ClienteModel> clients) {
+        this.cbxClientLst.setModel(new DefaultComboBoxModel<>(clients.toArray(new ClienteModel[clients.size()])));
+        this.cbxClientLst.setSelectedIndex(0);
     }
 
     /**

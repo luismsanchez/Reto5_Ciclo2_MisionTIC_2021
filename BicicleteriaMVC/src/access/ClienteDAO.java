@@ -75,6 +75,37 @@ public class ClienteDAO {
         return cliente;
     }
     
+    public ArrayList<ClienteModel> getAllClientesByBicycle(int IdBicycle){
+        ArrayList<ClienteModel> clientes = new ArrayList();
+        try{
+            if(conn == null)
+                conn = ConnectionDB.getConnection();
+
+            String sql = "SELECT cliente.identificador, cliente.nombre, apellido, telefono FROM cliente\n" +
+                    "JOIN ventas ON ventas.Id_cliente = cliente.identificador\n" +
+                    "JOIN bicicleta ON ventas.Id_bicicleta = bicicleta.identificador\n" +
+                    "WHERE ventas.Id_bicicleta = 1004;";
+            
+            
+            PreparedStatement statement = conn.prepareStatement(sql);
+            
+            statement.setInt(1, IdBicycle); // --> Inyección de Datos
+            ResultSet result = statement.executeQuery();
+            
+            while(result.next()){
+                ClienteModel cliente = new ClienteModel(result.getInt(1), 
+                        result.getString(2), result.getString(3), result.getInt(4));
+                clientes.add(cliente);
+            }
+            conn.close(); //--> Cierra la conexión
+        }
+        catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Código : " + ex.getErrorCode()
+                + "\nError : " + ex.getMessage());
+        }
+        return clientes;
+    }
+    
     
     public void insertCliente(ClienteModel cliente){
         try{
@@ -109,10 +140,12 @@ public class ClienteDAO {
             if(conn == null)
                 conn = ConnectionDB.getConnection();
             
-            String sql = "UPDATE cliente  SET nombre = ? WHERE identificador = ?;";
+            String sql = "UPDATE cliente  SET nombre = ?, apellido = ?, telefono = ? WHERE identificador = ?;";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, cliente.getNombre());
-            statement.setInt(2, cliente.getIdentificador());
+            statement.setString(2, cliente.getApellido());
+            statement.setInt(3, cliente.getTelefono());
+            statement.setInt(4, cliente.getIdentificador());
             
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0)

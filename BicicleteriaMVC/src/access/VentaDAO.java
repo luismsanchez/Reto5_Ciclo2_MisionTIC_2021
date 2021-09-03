@@ -177,4 +177,74 @@ public class VentaDAO {
         return ventas;
     }
     
+    
+    public ArrayList<VentaModel> showFilteredVentas(int idClient, int idBicycle){
+        
+        ArrayList<VentaModel> ventas = new ArrayList();
+        int case_ = -1;
+        
+        try{
+          if(conn == null)
+                conn = ConnectionDB.getConnection();
+          
+          String sql = "SELECT concat(nombre,concat(\" \",apellido)) AS \"Nombre\", referencia AS \"Referencia\"," +
+                " fecha AS \"Fecha\", costo AS \"Costo\" " +
+                "FROM ventas " +
+                "JOIN cliente ON ventas.Id_cliente = cliente.identificador " +
+                "JOIN bicicleta ON ventas.Id_bicicleta = bicicleta.identificador " ;
+                
+          
+          if(idClient != -1){
+              if(idBicycle != -1){
+                  sql += " WHERE cliente.identificador=? AND bicicleta.identificador=? ;";
+                  case_ = 1;
+              }
+              else {
+                  sql += " WHERE cliente.identificador=? ;";
+                  case_ = 2;
+              }
+          }
+          else if(idBicycle != -1){
+                sql += " WHERE bicicleta.identificador=? ;";
+                case_ = 3;
+          }
+          else{
+                sql += " ORDER BY fecha ;";
+                case_ = 4;
+          }
+          
+          PreparedStatement statement = conn.prepareStatement(sql);
+          switch (case_){
+              case 1:
+                  statement.setInt(1, idClient);
+                  statement.setInt(2, idBicycle);
+                  break;
+              case 2:
+                  statement.setInt(1, idClient);
+                  break;
+              case 3:
+                  statement.setInt(1, idBicycle);
+                  break;
+                  
+          }
+          
+          ResultSet result = statement.executeQuery();
+          
+            while(result.next()){
+                VentaModel venta = new VentaModel(result.getString(1), result.getString(2),
+                             result.getString(3), result.getDouble(4));
+                ventas.add(venta);
+            }
+            conn.close(); //--> Cierra la conexión
+        }
+        catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Código : " + ex.getErrorCode()
+                + "\nError : " + ex.getMessage());
+        }
+        
+        return ventas;
+    }
+    
+    
+
 }

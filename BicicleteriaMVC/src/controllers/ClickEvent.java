@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import model.BicicletaModel;
 import model.ClienteModel;
 import model.VentaModel;
+import view.BicicletaWindow;
+import view.ClienteWindow;
 import view.ControlsPanelVenta;
 import view.ResultsPanel;
 import view.ResultsVentaPanel;
@@ -29,7 +31,7 @@ import view.VentaWindow;
 public class ClickEvent implements ActionListener{
     // ### Attributes ###
     private ControlsPanelVenta ctrlPanelSales;
-    private ResultsVentaPanel ResultsSale;
+
     
     /**
      * Contructor of the class
@@ -39,9 +41,6 @@ public class ClickEvent implements ActionListener{
         this.ctrlPanelSales = ctrlPanelSales;
     }
     
-    public ClickEvent(ResultsVentaPanel ResultsSale){
-        this.ResultsSale = ResultsSale;
-    }
     
     // ### Methods ###
     @Override
@@ -62,9 +61,14 @@ public class ClickEvent implements ActionListener{
             new ResultsVentaWindow();
         }
         
-        //if(ae.getSource() == this.getResultsSale().getBtnBack()){
-            //new VentaWindow();
-        //}
+        if(ae.getSource() == this.ctrlPanelSales.getBtnCreateBicicleta()){
+            new BicicletaWindow();
+        }
+        
+        if(ae.getSource() == this.ctrlPanelSales.getBtnCreateCliente()){
+            new ClienteWindow();
+        }
+        
     }
 
     /**
@@ -72,13 +76,6 @@ public class ClickEvent implements ActionListener{
      */
     public ControlsPanelVenta getCtrlPanelSales() {
         return ctrlPanelSales;
-    }
-
-    /**
-     * @return the ResultsSale
-     */
-    public ResultsVentaPanel getResultsSale() {
-        return ResultsSale;
     }
     
 }

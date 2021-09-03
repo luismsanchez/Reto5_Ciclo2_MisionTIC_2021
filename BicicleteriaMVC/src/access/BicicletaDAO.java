@@ -46,6 +46,7 @@ public class BicicletaDAO {
         return bicicletas;
     }
     
+    
     public BicicletaModel getBicicleta(int identificador){
         BicicletaModel bicicleta = null;
         try{
@@ -70,6 +71,37 @@ public class BicicletaDAO {
         }
         return bicicleta;
     }   
+    
+    public ArrayList<BicicletaModel> getAllBicyclesByClient(int IdClient){
+        ArrayList<BicicletaModel> bicicletas = new ArrayList();
+        try{
+            if(conn == null)
+                conn = ConnectionDB.getConnection();
+
+            String sql = "SELECT bicicleta.identificador, referencia, costo FROM bicicleta\n" +
+                "JOIN ventas ON ventas.Id_bicicleta = bicicleta.identificador\n" +
+                "JOIN cliente ON ventas.Id_cliente = cliente.identificador\n" +
+                "WHERE ventas.Id_cliente = ?;";
+            
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, IdClient); // --> Inyección de Datos
+            
+            ResultSet result = statement.executeQuery();
+            
+            while(result.next()){
+                BicicletaModel bicicleta = new BicicletaModel(result.getInt(1), 
+                        result.getString(2), result.getDouble(3));
+                bicicletas.add(bicicleta);
+            }
+            conn.close(); //--> Cierra la conexión
+        }
+        catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Código : " + ex.getErrorCode()
+                + "\nError : " + ex.getMessage());
+        }
+        return bicicletas;
+    }
+    
     
     public void insertBicicleta(BicicletaModel bicicleta){
         try{
@@ -102,10 +134,11 @@ public class BicicletaDAO {
             if(conn == null)
                 conn = ConnectionDB.getConnection();
             
-            String sql = "UPDATE bicicleta SET referencia = ? WHERE identificador = ?;";
+            String sql = "UPDATE bicicleta SET referencia = ?, costo = ? WHERE identificador = ?;";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, bicicleta.getReferencia());
-            statement.setInt(2, bicicleta.getIdentificador());
+            statement.setDouble(2, bicicleta.getCosto());
+            statement.setInt(3, bicicleta.getIdentificador());
             
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0)

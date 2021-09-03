@@ -70,13 +70,16 @@ public class ControlsPanelVenta  extends JPanel {
         panelTop.add(lblTop);
         add(panelTop, BorderLayout.NORTH);
         
+        
         this.panelRight = new JPanel();
         this.lblRight = new JLabel("     ");
         add(panelRight.add(lblRight), BorderLayout.EAST);
         
+        /**
         this.panelLeft = new JPanel();
         this.lblLeft = new JLabel("     ");
         add(panelLeft.add(lblLeft), BorderLayout.WEST);
+        **/
         
         panelFields = new JPanel();
         panelFields.setLayout(new GridLayout(3, 2, 10, 70));
@@ -94,8 +97,7 @@ public class ControlsPanelVenta  extends JPanel {
         this.cbxClientesLst.setFont(fontNormal);
         panelFields.add(this.getCbxClientesLst());
         
-        ChangeEvent changeEvent = new ChangeEvent(this);
-        this.getCbxClientesLst().addActionListener(changeEvent);
+        
         
         // Bicycles selection
         this.lblBicicletas = new JLabel("Bicicleta", JLabel.CENTER);
@@ -108,7 +110,7 @@ public class ControlsPanelVenta  extends JPanel {
         this.cbxBicicletasLst.setSelectedIndex(0);
         panelFields.add(this.getCbxBicicletasLst());
         
-        this.getCbxBicicletasLst().addActionListener(changeEvent);
+        
         
         // Date record
         this.lblFecha = new JLabel("Fecha:", JLabel.CENTER);
